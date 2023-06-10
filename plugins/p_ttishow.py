@@ -254,6 +254,7 @@ async def list_users(bot, message):
             outfile.write(out)
         await message.reply_document('users.txt', caption="List Of Users")
 
+
 @Client.on_message(filters.command('chats') & filters.user(ADMINS))
 async def list_chats(bot, message):
     raju = await message.reply('Getting List Of chats')
@@ -270,3 +271,15 @@ async def list_chats(bot, message):
         with open('chats.txt', 'w+') as outfile:
             outfile.write(out)
         await message.reply_document('chats.txt', caption="List Of Chats")
+        
+        @Client.on_message(filters.command("totalreq") & filters.user(ADMINS))
+async def total_requests(bot, message):
+    rju = await message.reply('Fetching stats..')
+    total = await db.get_all_req_count()
+    await rju.edit(f"Total Requests: {total}")
+
+@Client.on_message(filters.command("purgereq") & filters.user(ADMINS))
+async def purge_requests(bot, message):
+    r = await message.reply("`processing...`")
+    await db.delete_all_req()
+    await r.edit("**Req db Cleared**" )
